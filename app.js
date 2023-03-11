@@ -1,9 +1,15 @@
 const fs = require("fs");
 const express = require("express");
+const morgan = require('morgan');
+
 const app = express();
-const port = 3000;
+
+
+// 1) MIDDLEWARE
+app.use(morgan('dev'));
 
 app.use(express.json());
+
 app.use((req , res , next) => {
     console.log("Hello From the middleware");
     next();
@@ -18,6 +24,7 @@ const tours = JSON.parse(
 
 // I use JSON.parse befor reading because this data in json format and i wanna data in Java script object foermat so i use json.parse
 
+// 2) ROUTE HANDLER
 const getAllTours = (req, res) => {
     // console.log(requestTime)
   res.status(200).json({
@@ -99,6 +106,8 @@ const deleteTour = (req, res) => {
 // app.patch('/api/v1/tours/:id' , updateTour);
 // app.delete('/api/v1/tours/:id' , deleteTour);
 
+// 3) ROUTES
+
 app.route("/api/v1/tours").get(getAllTours).post(createTour);
 app
   .route("/api/v1/tours/:id")
@@ -106,6 +115,8 @@ app
   .patch(updateTour)
   .delete(deleteTour);
 
+// 4) SERVER
+const port = 3000;
 app.listen(port, () => {
   console.log(`App runing on port ${port}...`);
 });
