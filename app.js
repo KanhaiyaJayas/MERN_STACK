@@ -5,24 +5,12 @@ const port = 3000;
 
 app.use(express.json());
 
-// app.get('/' , (req , res) => {
-//     res.status(200).json({message: 'hello from the server side!' , name: "kanhaiya" , age: 21});
-// });
-
-// app.post('/' , (req , res) => {
-//     res.status(200).json({
-//         name: "kanhaiya",
-//         age: 21
-//     })
-// })
-
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/tours-simple.json`));
 
 // I use JSON.parse befor reading because this data in json format and i wanna data in Java script object foermat so i use json.parse
 
-
-app.get('/api/v1/tours' , (req , res) => {
+const getAllTours = (req , res) => {
     res.status(200).json({
         status: 'success',
         dataLength: tours.length,
@@ -30,25 +18,9 @@ app.get('/api/v1/tours' , (req , res) => {
             tours: tours
         }
     })
-})
+}
 
-app.post('/api/v1/tours' , (req , res) => {
-    const newId = tours[tours.length - 1].id + 1;
-    const newTour = Object.assign({id: newId}, req.body);
-    tours.push(newTour);
-    fs.writeFile(`${__dirname}/dev-data/tours-simple.json` , JSON.stringify(tours) , err => {
-        res.status(201).json({
-            status: 'success',
-            data: {
-                tour: newTour
-            }
-        })
-    })
-})
-
-
-
-app.get('/api/v1/tours/:id' , (req, res) => {
+const getTour = (req, res) => {
     let id = req.params.id * 1;
     const tour = tours.find((data) => data.id == id);
     if(!tour) {
@@ -63,15 +35,23 @@ app.get('/api/v1/tours/:id' , (req, res) => {
             tour: tour
         }
     })
-})
+}
 
-//Get Data By Params
+const createTour =  (req , res) => {
+    const newId = tours[tours.length - 1].id + 1;
+    const newTour = Object.assign({id: newId}, req.body);
+    tours.push(newTour);
+    fs.writeFile(`${__dirname}/dev-data/tours-simple.json` , JSON.stringify(tours) , err => {
+        res.status(201).json({
+            status: 'success',
+            data: {
+                tour: newTour
+            }
+        })
+    })
+}
 
-
-app.patch('/api/v1/tours/:id' , (req , res) => {
-
-
-
+const updateTour = (req , res) => {
     if(req.params.id * 1 > tours.length) {
         return res.status(404).json({
             status: 'fail',
@@ -84,9 +64,9 @@ app.patch('/api/v1/tours/:id' , (req , res) => {
         tour: '<Updated tour here...>'
     }
    }) 
-})
+}
 
-app.delete('/api/v1/tours/:id' , (req , res) => {
+const deleteTour = (req , res) => {
     if(req.params.id * 1 > tours.length) {
         return res.status(404).json({
             status: 'fail',
@@ -97,7 +77,16 @@ app.delete('/api/v1/tours/:id' , (req , res) => {
     status: 'success',
     data: null
    }) 
-})
+}
+
+// app.get('/api/v1/tours' , getAllTours);
+// app.post('/api/v1/tours' , createTour);
+// app.get('/api/v1/tours/:id' , getTour);
+// app.patch('/api/v1/tours/:id' , updateTour);
+// app.delete('/api/v1/tours/:id' , deleteTour);
+
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 app.listen(port , () => {
     console.log(`App runing on port ${port}...`);
