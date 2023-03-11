@@ -1,0 +1,23 @@
+{
+  "name": "mern-stack",
+  "version": "1.0.0",
+  "description": "crud opeartion",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KanhaiyaJayas/MERN_STACK.git"
+  },
+  "author": "Kanhaiya Singh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KanhaiyaJayas/MERN_STACK/issues"
+  },
+  "homepage": "https://github.com/KanhaiyaJayas/MERN_STACK#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
