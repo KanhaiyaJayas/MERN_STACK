@@ -1,19 +1,18 @@
 const fs = require("fs");
 const express = require("express");
-const morgan = require('morgan');
+const morgan = require("morgan");
 
 const app = express();
 
-
 // 1) MIDDLEWARE
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 app.use(express.json());
 
-app.use((req , res , next) => {
-    console.log("Hello From the middleware");
-    next();
-})
+app.use((req, res, next) => {
+  console.log("Hello From the middleware");
+  next();
+});
 // app.use((req , res , next) => {
 //     req.requestTime = new Date().toISOString();
 //     next();
@@ -26,7 +25,7 @@ const tours = JSON.parse(
 
 // 2) ROUTE HANDLER
 const getAllTours = (req, res) => {
-    // console.log(requestTime)
+  // console.log(requestTime)
   res.status(200).json({
     status: "success",
     dataLength: tours.length,
@@ -100,50 +99,53 @@ const deleteTour = (req, res) => {
   });
 };
 
-const getAllUsers = (req , res) => {
-    res.status(500).json({
-        status: 'Error',
-        message: 'This route is not yet defined'
-    });
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: "Error",
+    message: "This route is not yet defined",
+  });
 };
 
-const getUser = (req , res) => {
-    res.status(500).json({
-        status: 'Error',
-        message: 'This route is not yet defined'
-    });
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: "Error",
+    message: "This route is not yet defined",
+  });
 };
 
-const createUser = (req , res) => {
-    res.status(500).json({
-        status: 'Error',
-        message: 'This route is not yet defined'
-    });
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: "Error",
+    message: "This route is not yet defined",
+  });
 };
 
-const updateUser = (req , res) => {
-    res.status(500).json({
-        status: 'Error',
-        message: 'This route is not yet defined'
-    });
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: "Error",
+    message: "This route is not yet defined",
+  });
 };
-const deleteUser = (req , res) => {
-    res.status(500).json({
-        status: 'Error',
-        message: 'This route is not yet defined'
-    });
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: "Error",
+    message: "This route is not yet defined",
+  });
 };
 // 3) ROUTES
 
-app.route("/api/v1/tours").get(getAllTours).post(createTour);
-app
-  .route("/api/v1/tours/:id")
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+const tourRouter = express.Router();
+const userRouter = express.Router();
+tourRouter.route("/").get(getAllTours).post(createTour);
 
-app.route('/api/v1/users').get(getAllUsers).post(createUser);
-app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
+tourRouter.route("/:id").get(getTour).patch(updateTour).delete(deleteTour);
+
+userRouter.route("/").get(getAllUsers).post(createUser);
+
+userRouter.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
+
+app.use("/api/v1/tours", tourRouter);
+app.use("/api/v1/users", userRouter);
 // 4) SERVER
 const port = 3000;
 app.listen(port, () => {
