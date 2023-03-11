@@ -52,7 +52,7 @@ app.get('/api/v1/tours/:id' , (req, res) => {
     let id = req.params.id * 1;
     const tour = tours.find((data) => data.id == id);
     if(!tour) {
-       return res.status(400).json({
+       return res.status(404).json({
             status: 'fail',
             message: "Write Correct Id"
         })
@@ -67,6 +67,24 @@ app.get('/api/v1/tours/:id' , (req, res) => {
 
 //Get Data By Params
 
+
+app.patch('/api/v1/tours/:id' , (req , res) => {
+
+
+
+    if(req.params.id * 1 > tours.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Write Correct Id'
+        })
+    }
+   res.status(200).json({
+    status: 'success',
+    data: {
+        tour: '<Updated tour here...>'
+    }
+   }) 
+})
 
 app.listen(port , () => {
     console.log(`App runing on port ${port}...`);
